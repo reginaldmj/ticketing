@@ -1,0 +1,18 @@
+/* Fallback navbar styles: keep navigation visible if theme JS/assets fail. */
+.header-area {
+	background-color: rgba(122, 106, 216, 0.96);
+	backdrop-filter: blur(4px);
+}
+
+.header-area .main-nav .logo h1,
+.header-area .main-nav .nav li a,
+.header-area .main-nav .menu-trigger span,
+.header-area .main-nav .menu-trigger span:before,
+.header-area .main-nav .menu-trigger span:after {
+	color: #fff;
+}
+
+.header-area .main-nav .nav li a:hover,
+.header-area .main-nav .nav li a.active {
+	background-color: rgba(255, 255, 255, 0.14);
+}

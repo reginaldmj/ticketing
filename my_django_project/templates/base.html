@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <header class="header-area header-sticky">
+  <header class="header-area header-sticky background-header">
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -29,14 +29,14 @@
               <h1>BugTrack</h1>
             </a>
             <ul class="nav">
-              <li><a href="{% url 'home' %}">All Tickets</a></li>
-              <li><a href="{% url 'ticket_create' %}">New Ticket</a></li>
+              <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">All Tickets</a></li>
+              <li><a href="{% url 'ticket_create' %}" class="{% if request.resolver_match.url_name == 'ticket_create' %}active{% endif %}">New Ticket</a></li>
               {% if user.is_authenticated %}
-                <li><a href="{% url 'user_profile' user.pk %}">{{ user.display_name|default:user.username }}</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="{% url 'user_profile' user.pk %}" class="{% if request.resolver_match.url_name == 'user_profile' %}active{% endif %}">{{ user.display_name|default:user.username }}</a></li>
+                <li><a href="{% url 'logout' %}" class="{% if request.resolver_match.url_name == 'logout' %}active{% endif %}">Logout</a></li>
               {% else %}
-                <li><a href="{% url 'signup' %}">Sign Up</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}" class="{% if request.resolver_match.url_name == 'signup' %}active{% endif %}">Sign Up</a></li>
+                <li><a href="{% url 'login' %}" class="{% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a></li>
               {% endif %}
             </ul>
             <a class="menu-trigger">
