@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.display_name|default:profile_user.username }} · BugTrack{% endblock %}
+{% block page_heading %}{{ profile_user.display_name|default:profile_user.username }}{% endblock %}
+{% block page_subheading %}Track assigned and created tickets for this contributor.{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>{{ profile_user.display_name|default:profile_user.username }}</h2>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Profile Info -->
+  <aside class="detail-meta">
+    <div class="meta-row">
+      <span class="meta-label">Username</span>
+      <span class="meta-value">{{ profile_user.username }}</span>
+    </div>
+    {% if profile_user.display_name %}
+    <div class="meta-row">
+      <span class="meta-label">Display Name</span>
+      <span class="meta-value">{{ profile_user.display_name }}</span>
+    </div>
+    {% endif %}
+    {% if profile_user.homepage %}
+    <div class="meta-row">
+      <span class="meta-label">Homepage</span>
+      <span class="meta-value"><a href="{{ profile_user.homepage }}" target="_blank" rel="noopener">{{ profile_user.homepage }}</a></span>
+    </div>
+    {% endif %}
+    <div class="meta-row">
+      <span class="meta-label">Member since</span>
+      <span class="meta-value">{{ profile_user.date_joined|date:"M d, Y" }}</span>
+    </div>
+  </aside>
+
+  <!-- Tickets -->
+  <div class="detail-body">
+
+    <h3 style="margin-bottom:1rem;">Assigned Tickets <span class="count">{{ assigned_tickets.count }}</span></h3>
+    {% if assigned_tickets %}
+    <table class="ticket-table" style="margin-bottom:2rem;">
+      <thead><tr><th>#</th><th>Title</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for t in assigned_tickets %}
+        <tr onclick="window.location='{% url 'ticket_detail' t.pk %}'">
+          <td style="color:var(--muted);font-size:12px;">{{ t.pk }}</td>
+          <td>{{ t.title }}</td>
+          <td>
+            {% if t.status == 'N' %}<span class="badge badge-open">New</span>
+            {% elif t.status == 'P' %}<span class="badge badge-progress">In Progress</span>
+            {% elif t.status == 'D' %}<span class="badge badge-closed">Done</span>
+            {% else %}<span class="badge badge-default">{{ t.status }}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="color:var(--muted)">No assigned tickets.</p>
+    {% endif %}
+
+    <h3 style="margin-bottom:1rem;">Created Tickets <span class="count">{{ created_tickets.count }}</span></h3>
+    {% if created_tickets %}
+    <table class="ticket-table">
+      <thead><tr><th>#</th><th>Title</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for t in created_tickets %}
+        <tr onclick="window.location='{% url 'ticket_detail' t.pk %}'">
+          <td style="color:var(--muted);font-size:12px;">{{ t.pk }}</td>
+          <td>{{ t.title }}</td>
+          <td>
+            {% if t.status == 'N' %}<span class="badge badge-open">New</span>
+            {% elif t.status == 'P' %}<span class="badge badge-progress">In Progress</span>
+            {% elif t.status == 'D' %}<span class="badge badge-closed">Done</span>
+            {% else %}<span class="badge badge-default">{{ t.status }}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="color:var(--muted)">No created tickets.</p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

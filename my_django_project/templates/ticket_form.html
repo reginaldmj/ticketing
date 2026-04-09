@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}{% if ticket %}Edit Ticket{% else %}New Ticket{% endif %} · BugTrack{% endblock %}
+{% block page_heading %}{% if ticket %}Update Ticket #{{ ticket.pk }}{% else %}Create a New Ticket{% endif %}{% endblock %}
+{% block page_subheading %}{% if ticket %}Refine scope, status, and ownership for this issue.{% else %}Capture the issue clearly so your team can take action fast.{% endif %}{% endblock %}
+
+{% block content %}
+
+  <div style="margin-bottom:2rem;">
+    <a href="{% url 'home' %}" class="btn btn-outline">← Back</a>
+  </div>
+
+  <div class="form-card">
+
+    <h2>{% if ticket %}Edit Ticket{% else %}Open a New Ticket{% endif %}</h2>
+    <p class="form-subtitle">
+      {% if ticket %}
+        Update the details for ticket #{{ ticket.pk }}.
+      {% else %}
+        Describe the bug or feature request clearly so it can be acted on.
+      {% endif %}
+    </p>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- Title -->
+      <div class="form-group">
+        <label for="id_title">Title</label>
+        <input
+          type="text"
+          id="id_title"
+          name="title"
+          class="form-control"
+          value="{{ form.title.value|default:'' }}"
+          placeholder="Brief description of the issue"
+          maxlength="20"
+          required
+        >
+        {% if form.title.errors %}
+          <div class="form-error">{{ form.title.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="id_description">Description</label>
+        <textarea
+          id="id_description"
+          name="description"
+          class="form-control"
+          placeholder="Steps to reproduce, expected vs actual behavior..."
+          maxlength="200"
+          required
+        >{{ form.description.value|default:'' }}</textarea>
+        {% if form.description.errors %}
+          <div class="form-error">{{ form.description.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label for="id_status">Status</label>
+        <select id="id_status" name="status" class="form-control">
+          <option value="N" {% if form.status.value == 'N' %}selected{% endif %}>New</option>
+          <option value="P" {% if form.status.value == 'P' %}selected{% endif %}>In Progress</option>
+          <option value="D" {% if form.status.value == 'D' %}selected{% endif %}>Done</option>
+          <option value="I" {% if form.status.value == 'I' %}selected{% endif %}>Invalid</option>
+        </select>
+        {% if form.status.errors %}
+          <div class="form-error">{{ form.status.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Assigned To -->
+      <div class="form-group">
+        <label for="id_user_assigned_to">Assign To</label>
+        <select id="id_user_assigned_to" name="user_assigned_to" class="form-control">
+          <option value="">— Unassigned —</option>
+          {% for u in users %}
+            <option value="{{ u.pk }}"
+              {% if form.user_assigned_to.value|stringformat:"s" == u.pk|stringformat:"s" %}selected{% endif %}>
+              {{ u.display_name|default:u.username }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          {% if ticket %}Save Changes{% else %}Open Ticket{% endif %}
+        </button>
+        <a href="{% url 'home' %}" class="btn btn-outline">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}

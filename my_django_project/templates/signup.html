@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Sign Up · BugTrack{% endblock %}
+{% block page_heading %}Create Your Account{% endblock %}
+{% block page_subheading %}Join the workspace and start tracking issues with your team.{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="contact-us-content" style="margin-top: 0;">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" id="form-submit" class="orange-button">Sign Up</button>
+            </form>
+            <p style="margin-top: 16px;">
+                Already have an account?
+                <a href="{% url 'login' %}">Login</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

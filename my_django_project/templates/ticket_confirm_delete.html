@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Ticket – Bug Tracker{% endblock %}
+{% block page_heading %}Delete Ticket{% endblock %}
+{% block page_subheading %}Confirm removal before permanently deleting this issue record.{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Delete Ticket</h2>
+  <p>Are you sure you want to delete <strong>{{ ticket.title }}</strong>? This cannot be undone.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, delete it</button>
+    <a href="{% url 'ticket_detail' ticket.pk %}" class="btn">Cancel</a>
+  </form>
+</div>
+{% endblock %}

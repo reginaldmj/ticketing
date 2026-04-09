@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}All Tickets · BugTrack{% endblock %}
+{% block page_heading %}All Team Tickets{% endblock %}
+{% block page_subheading %}Review progress, triage new issues, and keep delivery moving.{% endblock %}
+{% block extra_css %}
+<style>
+  .ticket-row { cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-label">Issue Tracking System</p>
+    <h1>Track Every<br><em>Bug & Feature</em></h1>
+    <p class="hero-sub">{{ tickets.count }} open ticket{{ tickets.count|pluralize }} in the system</p>
+  </section>
+
+  <!-- TICKET LIST -->
+  <div class="page-header">
+    <h2>All Tickets</h2>
+    <div style="display:flex; gap:1rem; align-items:center;">
+      <span class="count">{{ tickets.count }} total</span>
+      <a href="{% url 'ticket_create' %}" class="btn btn-primary">+ New Ticket</a>
+    </div>
+  </div>
+
+  <table class="ticket-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Assigned To</th>
+        <th>Created By</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr class="ticket-row" data-href="{% url 'ticket_detail' ticket.pk %}">
+        <td style="color: var(--muted); font-size:12px;">{{ ticket.pk }}</td>
+        <td>
+          <div class="ticket-title">
+            <a href="{% url 'ticket_detail' ticket.pk %}" class="ticket-open-link">{{ ticket.title }}</a>
+          </div>
+          <div class="ticket-desc">{{ ticket.description }}</div>
+        </td>
+        <td>
+          {% if ticket.status == 'N' %}
+            <span class="badge badge-open">New</span>
+          {% elif ticket.status == 'P' %}
+            <span class="badge badge-progress">In Progress</span>
+          {% elif ticket.status == 'D' %}
+            <span class="badge badge-closed">Done</span>
+          {% elif ticket.status == 'I' %}
+            <span class="badge badge-default">Invalid</span>
+          {% else %}
+            <span class="badge badge-default">{{ ticket.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if ticket.user_assigned_to %}
+            <a href="{% url 'user_profile' ticket.user_assigned_to.pk %}"
+               onclick="event.stopPropagation()">
+              {{ ticket.user_assigned_to.display_name|default:ticket.user_assigned_to.username }}
+            </a>
+          {% else %}
+            <span style="color:var(--muted)">—</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'user_profile' ticket.creator.pk %}" onclick="event.stopPropagation()">
+            {{ ticket.creator.display_name|default:ticket.creator.username }}
+          </a>
+        </td>
+        <td style="color:var(--muted); font-size:12px;">
+          {{ ticket.date|date:"M d, Y" }}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            <div class="empty-icon">∅</div>
+            <p>No tickets yet. Create the first one.</p>
+            <br>
+            <a href="{% url 'ticket_create' %}" class="btn btn-outline">+ New Ticket</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.ticket-row').forEach(function (row) {
+      row.addEventListener('click', function (event) {
+        if (event.target.closest('a, button, input, select, textarea, label')) {
+          return;
+        }
+        window.location.href = row.dataset.href;
+      });
+    });
+  });
+</script>
+{% endblock %}

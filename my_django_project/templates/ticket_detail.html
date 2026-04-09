@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ ticket.title }} · BugTrack{% endblock %}
+{% block page_heading %}Ticket #{{ ticket.pk }} Details{% endblock %}
+{% block page_subheading %}Inspect status, ownership, and full issue context in one place.{% endblock %}
+
+{% block content %}
+
+  <div style="margin-bottom:2rem;">
+    <a href="{% url 'home' %}" class="btn btn-outline">← All Tickets</a>
+  </div>
+
+  <div class="detail-grid">
+
+    <!-- LEFT: main content -->
+    <div class="detail-body">
+      <div style="margin-bottom:1rem;">
+        {% if ticket.status == 'N' %}
+          <span class="badge badge-open">New</span>
+        {% elif ticket.status == 'P' %}
+          <span class="badge badge-progress">In Progress</span>
+        {% elif ticket.status == 'D' %}
+          <span class="badge badge-closed">Done</span>
+        {% elif ticket.status == 'I' %}
+          <span class="badge badge-default">Invalid</span>
+        {% else %}
+          <span class="badge badge-default">{{ ticket.status }}</span>
+        {% endif %}
+      </div>
+
+      <h1>{{ ticket.title }}</h1>
+
+      <div class="description">
+        <p>{{ ticket.description }}</p>
+      </div>
+
+      {% if user == ticket.creator or user.is_staff %}
+      <div class="detail-actions">
+        <a href="{% url 'ticket_edit' ticket.pk %}" class="btn btn-outline">Edit Ticket</a>
+        <a href="{% url 'ticket_delete' ticket.pk %}" class="btn btn-danger">Delete</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: meta sidebar -->
+    <aside class="detail-meta">
+      <div class="meta-row">
+        <span class="meta-label">Ticket #</span>
+        <span class="meta-value">{{ ticket.pk }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Created by</span>
+        <span class="meta-value">
+          <a href="{% url 'user_profile' ticket.creator.pk %}">
+            {{ ticket.creator.display_name|default:ticket.creator.username }}
+          </a>
+        </span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Assigned to</span>
+        <span class="meta-value">
+          {% if ticket.user_assigned_to %}
+            <a href="{% url 'user_profile' ticket.user_assigned_to.pk %}">
+              {{ ticket.user_assigned_to.display_name|default:ticket.user_assigned_to.username }}
+            </a>
+          {% else %}
+            <span style="color:var(--muted)">Unassigned</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Completed by</span>
+        <span class="meta-value">
+          {% if ticket.user_who_completed %}
+            <a href="{% url 'user_profile' ticket.user_who_completed.pk %}">
+              {{ ticket.user_who_completed.display_name|default:ticket.user_who_completed.username }}
+            </a>
+          {% else %}
+            <span style="color:var(--muted)">—</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Date opened</span>
+        <span class="meta-value">{{ ticket.date|date:"M d, Y" }}</span>
+      </div>
+    </aside>
+
+  </div>
+
+{% endblock %}
