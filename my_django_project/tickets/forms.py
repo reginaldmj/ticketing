@@ -23,6 +23,12 @@ class SignupForm(forms.ModelForm):
         model = MyUser
         fields = ['username', 'password','display_name', 'age']
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])  # 🔐 hash password
+        if commit:
+            user.save()
+        return user
 
 class MyUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
