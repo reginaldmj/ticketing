@@ -24,7 +24,7 @@ class MyTicket(models.Model):
     INVALID = 'I'
     STATUS_CHOICES = [
         (NEW, 'New'),
-        (IN_PROGRESS, 'In_Progress'),
+        (IN_PROGRESS, 'In Progress'),
         (DONE, 'Done'),
         (INVALID, 'Invalid'),
     ]
@@ -35,7 +35,7 @@ class MyTicket(models.Model):
     status = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
-        default=STATUS_CHOICES,
+        default=NEW,
     )
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE)
     user_assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE, null=True, )

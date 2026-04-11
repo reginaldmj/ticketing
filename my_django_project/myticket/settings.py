@@ -157,3 +157,5 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
 
 LOGIN_URL = 'login'
+OGIN_REDIRECT_URL = 'home'
+

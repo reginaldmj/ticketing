@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ ticket.title }} · BugTrack{% endblock %}
-{% block page_heading %}Ticket #{{ ticket.pk }} Details{% endblock %}
+{% block page_heading %}{{ ticket.title }}{% endblock %}
 {% block page_subheading %}Inspect status, ownership, and full issue context in one place.{% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
 
       {% if user == ticket.creator or user.is_staff %}
       <div class="detail-actions">
-        <a href="{% url 'ticket_edit' ticket.pk %}" class="btn btn-outline">Edit Ticket</a>
+        <a href="{% url 'ticket_edit' ticket.pk %}" class="btn btn-danger btn-edit">Edit Ticket</a>
         <a href="{% url 'ticket_delete' ticket.pk %}" class="btn btn-danger">Delete</a>
       </div>
       {% endif %}
