@@ -89,3 +89,16 @@
 	border-color: #1d4ed8 !important;
 	color: #fff !important;
 }
+
+.btn-back {
+	background-color: #ffffff !important;
+	border: 1px solid #c9d3ea !important;
+	color: #1f2a44 !important;
+}
+
+.btn-back:hover,
+.btn-back:focus {
+	background-color: #f5f8ff !important;
+	border-color: #9fb3e7 !important;
+	color: #17203a !important;
+}

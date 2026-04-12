@@ -6,7 +6,11 @@
 {% block content %}
 
   <div style="margin-bottom:2rem;">
-    <a href="{% url 'home' %}" class="btn btn-outline">← Back</a>
+    {% if ticket %}
+      <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-outline">← Back</a>
+    {% else %}
+      <a href="{% url 'home' %}" class="btn btn-outline">← Back</a>
+    {% endif %}
   </div>
 
   <div class="form-card">
@@ -89,7 +93,11 @@
         <button type="submit" class="btn btn-primary">
           {% if ticket %}Save Changes{% else %}Open Ticket{% endif %}
         </button>
-        <a href="{% url 'home' %}" class="btn btn-outline">Cancel</a>
+        {% if ticket %}
+          <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-outline">Cancel</a>
+        {% else %}
+          <a href="{% url 'home' %}" class="btn btn-outline">Cancel</a>
+        {% endif %}
       </div>
 
     </form>
