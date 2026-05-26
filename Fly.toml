@@ -1,0 +1,12 @@
+app = "ticketing-sqlite"
+
+[env]
+PORT = "8080"
+
+[[mounts]]
+source = "sqlite_data"
+destination = "/data"
+
+[build]
+  # Use default Python runtime
+

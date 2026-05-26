@@ -6,7 +6,7 @@ from .models import MyTicket, MyUser
 class TicketForm(forms.ModelForm):
     """
     ModelForm for creating and editing MyTicket instances.
-    We exclude 'creator' because it's set automatically in the view.
+    The ticket creator is assigned in the view, so it is intentionally excluded.
     """
     class Meta:
         model  = MyTicket
@@ -25,7 +25,8 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ['username', 'password','display_name', 'age']
+        # Only expose the profile fields needed for signup.
+        fields = ['username', 'password', 'display_name', 'age']
 
 
 class MyUserCreationForm(UserCreationForm):

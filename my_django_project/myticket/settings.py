@@ -156,6 +156,8 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
+# Used by `login_required` when redirecting anonymous requests.
 LOGIN_URL = 'login'
-OGIN_REDIRECT_URL = 'home'
+# Default redirect after successful login when using Django's auth views.
+LOGIN_REDIRECT_URL = 'home'
 

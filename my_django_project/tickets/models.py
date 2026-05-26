@@ -1,14 +1,9 @@
 from django.db import models
-
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from datetime import timezone
-from datetime import datetime
 from django.utils import timezone
 
-# Create your models here.
-
+# Custom user model used across the app for profile fields and authentication.
 class MyUser(AbstractUser):
     homepage = models.URLField(null=True, blank=True)
     display_name = models.CharField(max_length=40, null=True, blank=True)
@@ -34,11 +29,15 @@ class MyTicket(models.Model):
     description = models.CharField(max_length=200)
     status = models.CharField(
         max_length=1,
+        # Only a short code is stored; labels are presented in the UI.
         choices=STATUS_CHOICES,
         default=NEW,
     )
+    # Creator is required and used to enforce edit/delete permissions.
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE)
-    user_assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE, null=True, )
+    # Optional assignee for the ticket workflow.
+    user_assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE, null=True)
+    # Optional completion owner to track who closed the ticket.
     user_who_completed = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+', on_delete=models.CASCADE, null=True)
 
     class Meta:

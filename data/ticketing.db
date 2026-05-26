@@ -1,0 +1,27 @@
+from sqlalchemy import create_engine
+import os
+
+DB_PATH = "/data/ticketing.db"
+DATABASE_URL = f"sqlite:///{DB_PATH}"
+
+engine = create_engine(DATABASE_URL)
+
+# Example: create table
+with engine.connect() as conn:
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS tickets (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        description TEXT
+    )
+    """)
+
+import os
+port = int(os.environ.get("PORT", 8080))
+
+# For FastAPI / Uvicorn:
+import uvicorn
+from main import app  # your FastAPI app
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=port)

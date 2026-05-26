@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -7,9 +5,12 @@ from django.contrib import messages
 from .models import MyTicket, MyUser
 from .forms import TicketForm, SignupForm
 
+# Views for user registration, authentication, ticket CRUD, and profile display.
+
 
 # ── AUTH VIEWS ──────────────────────────────────────────────
 def signup(request):
+    # Show a blank signup form unless the user submits data.
     form = SignupForm()
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -19,6 +20,7 @@ def signup(request):
             user.save()
             return redirect('home')
         else:
+            # Reset the form to avoid reusing invalid bound data in this flow.
             form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
@@ -74,7 +76,8 @@ def ticket_create(request):
         form = TicketForm(request.POST)
         if form.is_valid():
             ticket = form.save(commit=False)
-            ticket.creator = request.user   # auto-set creator to logged-in user
+            # Ensure the creator is always the currently logged-in user.
+            ticket.creator = request.user
             ticket.save()
             messages.success(request, f'Ticket "{ticket.title}" created successfully.')
             return redirect('ticket_detail', pk=ticket.pk)
@@ -94,6 +97,7 @@ def ticket_edit(request, pk):
     ticket = get_object_or_404(MyTicket, pk=pk)
     users  = MyUser.objects.filter(is_active=True)
 
+    # Protect ticket editing behind ownership or staff privileges.
     if request.user != ticket.creator and not request.user.is_staff:
         messages.error(request, 'You can only edit tickets you created.')
         return redirect('ticket_detail', pk=pk)
